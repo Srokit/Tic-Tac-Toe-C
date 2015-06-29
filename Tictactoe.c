@@ -1,9 +1,16 @@
 //Tic tac toe 2 player game
 
 #include <stdio.h>
+#include <ctype.h>
 
 char grid[3][3];
 
+//quicky clear stdin stream
+void clearInput(){
+    while(fgetc(stdin) != '\n')/*do nothing*/;
+}
+
+//set all spots to -
 void clearGrid(){
 
     int row, col;
@@ -14,14 +21,15 @@ void clearGrid(){
     }
 }
 
-void printGrid(){
+//loop through grid and print chars
+void showGrid(){
 
     printf("\n");
     int i;
     for(i = 0; i < 3; i++){
         int j;
         for(j = 0; j < 3; j++){
-            printf("[%s]\t");
+            printf("\t[%c]", grid[i][j]);
         }
         printf("\n");
     }
@@ -30,17 +38,15 @@ void printGrid(){
 //returns 1 if valid 0 otherwise
 int checkMove(row, col){
 
-    if((row < 1 || row > 3) || (col < 1 || col > 3)){
-        return 0;
-    }
-    else if(grid[row][col] != '-'){
-        return 0;
+    if((row >= 1 && row <= 3) && (col >= 1 && col <= 3) && (grid[row - 1][col - 1] == '-')){
+        return 1;
     }
     else{
-        return 1;
+        return 0;
     }
 }
 
+//verifies players' input for replay
 int checkReplayIn(input){
     if(tolower(input) == 'y'){
         return 1;
@@ -68,10 +74,10 @@ int checkWin(){
 
     int col;
     for(col = 0; col < 3; col++){
-        if(grid[col][0] == 'X' && grid[col][1] == 'X' && grid[col][2] == 'X'){
+        if(grid[0][col] == 'X' && grid[1][col] == 'X' && grid[2][col] == 'X'){
             return 1;
         }
-        else if(grid[col][0] == 'O' && grid[col][1] == 'O' && grid[col][2] == 'O'){
+        else if(grid[0][col] == 'O' && grid[1][col] == 'O' && grid[2][col] == 'O'){
             return 2;
         } 
     }
@@ -93,7 +99,7 @@ int checkWin(){
 
 int main(){
     
-    printf("---TIC-TAC-TOE---\n");    
+    printf("\n---TIC-TAC-TOE---\n");    
 
     int replay = 0;
     do{
@@ -111,6 +117,10 @@ int main(){
             int row = 0;
             int col = 0;
 
+            showGrid();
+
+            
+
             if(isXTurn){
                 printf("Player X, your move.\n");
             }
@@ -118,27 +128,39 @@ int main(){
                 printf("Player O, your move.\n");
             }
 
+            //move inputed
             printf("Row: ");
-            //checks to see if an int was read
+            //move checked
             if(!scanf("%d", &row)){
-                playing = 0;
-                printf("Invalid move.\n");
+                clearInput();
+                printf("Invalid entry.\n");
                 continue;
             }
 
             printf("Column: ");
             if(!scanf("%d", &col)){
-                playing = 0;
-                printf("Invalid move.\n");
+                clearInput();
+                printf("Invalid entry.\n");
                 continue;
             }
             
             else if(!checkMove(row, col)){
-                playing = 0;
-                printf("Invalid move,\n");
+                printf("Invalid move.\n");
                 continue;
             }
+            
+            //move is applied
+            if(isXTurn){
+                grid[row - 1][col - 1] = 'X';
+            }
+            if(!isXTurn){
+                grid[row - 1][col - 1] = 'O';
+            }
 
+            //only switches if this point in loop is reached
+            isXTurn = !isXTurn;
+
+            //see if someone won
             switch(checkWin()){
                 case 0:
                     break;
@@ -151,9 +173,9 @@ int main(){
                     playing = 0;
                     break;
             }
-            //only switches if this point in loop is reached
-            isXTurn = !isXTurn;
         }
+
+        showGrid();
 
         if(winnerIsX){
             printf("X Wins!\n");
@@ -166,6 +188,7 @@ int main(){
         int invalidIn = 1;
         //loop to check input
         while(invalidIn){
+            clearInput();
             printf("Play again? (y or n): ");
             scanf("%c", &replayIn);
 
