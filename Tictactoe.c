@@ -200,7 +200,7 @@ int main(){
         switch(outcome){
             
             case 0:
-                printf("No one wins :(\n")
+                printf("No one wins :(\n");
                 break;
             
             case 1:
