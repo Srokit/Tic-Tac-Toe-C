@@ -97,6 +97,7 @@ int checkWin(){
     }
 }
 
+//checks if no more moves can be made
 int checkFull(){
     
     int i;
@@ -180,16 +181,17 @@ int main(){
                 case 0:
                     break;
                 case 1:
-                    outcome = 0;
+                    outcome = 1;
                     playing = 0;
                     break;
                 case 2:
-                    outcome = 1;
+                    outcome = 2;
                     playing = 0;
                     break;
             }
             
-            if(checkFull){
+            if(checkFull()){
+                outcome = 0;
                 playing = 0;
             }
         }
