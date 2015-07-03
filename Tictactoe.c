@@ -97,6 +97,22 @@ int checkWin(){
     }
 }
 
+//checks if no more moves can be made
+int checkFull(){
+    
+    int i;
+    for(i = 0; i < 3; i++){
+        
+        int j;
+        for(j = 0; j < 3; j++){
+            if(grid[i][j] == '-'){
+                return 0;
+            }
+        }
+    }
+    return 1;
+}
+
 int main(){
     
     printf("\n---TIC-TAC-TOE---\n");    
@@ -104,8 +120,8 @@ int main(){
     int replay = 0;
     do{
 
-        //bool to decide winner
-        int winnerIsX;
+        //bool to decide winner or full 0: full board 1: X won 2: O won
+        int outcome;
         clearGrid();
 
         int playing = 1;
@@ -159,29 +175,43 @@ int main(){
 
             //only switches if this point in loop is reached
             isXTurn = !isXTurn;
-
+            
             //see if someone won
             switch(checkWin()){
                 case 0:
                     break;
                 case 1:
-                    winnerIsX  = 1;
+                    outcome = 1;
                     playing = 0;
                     break;
                 case 2:
-                    winnerIsX = 0;
+                    outcome = 2;
                     playing = 0;
                     break;
+            }
+            
+            if(checkFull()){
+                outcome = 0;
+                playing = 0;
             }
         }
 
         showGrid();
 
-        if(winnerIsX){
-            printf("X Wins!\n");
-        }
-        else{
-            printf("O Wins!\n");
+        //check what made the game stop
+        switch(outcome){
+            
+            case 0:
+                printf("No one wins :(\n");
+                break;
+            
+            case 1:
+                printf("X Wins!\n");
+                break;
+            
+            case 2:
+                printf("O Wins!\n");
+                break;
         }
 
         char replayIn;
